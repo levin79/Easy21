@@ -20,7 +20,7 @@ def monte_carlo(state, action):
     while True:
         epsilon = N0 / (N0 + N_state[state[0] + 9, state[1] + 9])
         if random.random() <= (1 - epsilon):
-            if V[state[state[0] + 9, state[1] + 9] > state[state[0] + 9, state[1] + 9 + action * 40]]:
+            if V[state[0] + 9, state[1] + 9] > V[state[0] + 9, state[1] + 9 + 40]:
                 action = 0
             else:
                 action = 1
@@ -32,16 +32,20 @@ def monte_carlo(state, action):
         alpha = 1 / N_state_action[state[0] + 9, state[1] + 9 + action * 40]
         G += r
         V[state[0] + 9, state[1] + 9 + action * 40] += alpha * (G - r)
+        #print(alpha)
         #if state[1] > 21 or state[1] < 1 or (action == 0 and (state[0] < 1 or state[0] >= 17)): #terminal
         if r == 1 or r == -1:
+            #print(r)
             break
-    return state, V[state[0] + 9, state[1] + 9 + action * 40]
+    return state, r
 
+for k in range(1, 10000):
+    #initialize range of both delear's first card and player's sum
+    for action in range(0, 1):
+        for i in range(1, 10):
+            for j in range(1, 21):
+                M.append(monte_carlo([i, j], action))
 
-#initialize range of both delear's first card and player's sum
-for action in range(0, 1):
-    for i in range(1, 10):
-        for j in range(1, 21):
-            M.append(monte_carlo([i, j], action))
 
 np.save("MC_Control.npy", M)
+print ("Save Complete")
