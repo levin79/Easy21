@@ -26,24 +26,24 @@ def monte_carlo(state, action):
                 action = 1
         else:
             action = random.randint(0, 1)
-        state, r = step(state, action)
+        state, r, terminal = step(state, action)
         N_state_action[state[0] + 9, state[1] + 9 + action * 40] += 1
         N_state[state[0] + 9, state[1] + 9] = N_state[state[0] + 9, state[1] + 9] + 1
         alpha = 1 / N_state_action[state[0] + 9, state[1] + 9 + action * 40]
         G += r
-        V[state[0] + 9, state[1] + 9 + action * 40] += alpha * (G - r)
+        V[state[0] + 9, state[1] + 9 + action * 40] += alpha * (G - V[state[0] + 9, state[1] + 9 + action * 40])
         #print(alpha)
         #if state[1] > 21 or state[1] < 1 or (action == 0 and (state[0] < 1 or state[0] >= 17)): #terminal
-        if r == 1 or r == -1:
+        if terminal == 1:
             #print(r)
             break
     return state, r
 
 for k in range(1, 10000):
     #initialize range of both delear's first card and player's sum
-    for action in range(0, 1):
-        for i in range(1, 10):
-            for j in range(1, 21):
+    for action in range(0, 2):
+        for i in range(1, 11):
+            for j in range(1, 22):
                 M.append(monte_carlo([i, j], action))
 
 
